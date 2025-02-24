@@ -24,7 +24,7 @@ public class FantLabBooksController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Author>>> SearchAuthors([FromQuery]string name, CancellationToken cancellationToken)
     {
-        var result = _fantLabBooksService.SearchAuthors(
+        var result = await _fantLabBooksService.SearchAuthors(
             new SearchAuthorsQuery(
                 AuthorName: name,
                 PageNum: 1), 
