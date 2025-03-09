@@ -1,8 +1,5 @@
-﻿// using MediatR;
-// using Microsoft.EntityFrameworkCore;
-
-using BookTracker.Contracts;
-using Microsoft.AspNetCore.Mvc;
+﻿using BookTracker.Contracts;
+using BookTracker.Domain;
 
 namespace BookTracker.Logic;
 
@@ -12,33 +9,34 @@ public record SearchAuthorsQuery(
 );
 public class FantLabBooksService 
 {
-    private static HttpClient sharedClient = new()
+    private static HttpClient _sharedClient = new()
     {
         BaseAddress = new Uri("https://api.fantlab.ru"),
     };
-    public async Task<List<Author>> SearchAuthors(SearchAuthorsQuery query, CancellationToken cancellationToken) //async
+    public async Task<List<AuthorFantlabSearchContract>> SearchAuthors(SearchAuthorsQuery query, CancellationToken cancellationToken) //async
     {
         // GET /search-autors?q={query}&page={page}&onlymatches={0|1}
-        using HttpResponseMessage response = await sharedClient.GetAsync("search-autors?q="+query.AuthorName, cancellationToken);
+        using HttpResponseMessage 
+            response = await _sharedClient.GetAsync("search-autors?q="+query.AuthorName, cancellationToken);
     
         response.EnsureSuccessStatusCode()
             .WriteRequestToConsole();
 
-        var jsonResponse = await response.Content.ReadFromJsonAsync<List<Author>>(cancellationToken);
-        
+        var jsonResponse = await response.Content.ReadFromJsonAsync<SearchFantlabResponceContract>(cancellationToken);
+        // var stringResponse = await response.Content.ReadAsStringAsync();
         // Console.WriteLine($"{jsonResponse}\n");
-        // var list = new List<Author>();
-        // list.Add(new Author
+        // var list = new List<SearchFantlabResponceContract>();
+        // list.Add(new SearchFantlabResponceContract
         // {
         //     Name = "Tatiana",
         //     Surname = "Vishniakova"
         // });
-        // list.Add(new Author
+        // list.Add(new SearchFantlabResponceContract
         // {
         //     Name = "Jack",
         //     Surname = "London"
         // });
-        return jsonResponse!; 
+        return jsonResponse!.matches; 
     } 
     static async Task GetAsync(HttpClient httpClient)
     {

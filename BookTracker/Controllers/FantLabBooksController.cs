@@ -1,4 +1,4 @@
-using BookTracker.Contracts;
+using BookTracker.Domain;
 using BookTracker.Logic;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +22,7 @@ public class FantLabBooksController : ControllerBase
     /// <returns>Result</returns>
     /// <response code="200">Success</response>
     [HttpGet]
-    public async Task<ActionResult<List<Author>>> SearchAuthors([FromQuery]string name, CancellationToken cancellationToken)
+    public async Task<ActionResult<SearchFantlabResponceContract>> SearchAuthors([FromQuery]string name, CancellationToken cancellationToken)
     {
         var result = await _fantLabBooksService.SearchAuthors(
             new SearchAuthorsQuery(

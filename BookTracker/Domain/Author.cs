@@ -1,4 +1,4 @@
-namespace BookTracker.Contracts;
+namespace BookTracker.Domain;
 
 public class Author
 {
